@@ -25,27 +25,6 @@ from sklearn.model_selection import KFold
 fname='E:/paper/dataset/dataset_liver_bmodes_steatosis_assessment_IJCARS.mat'
 data = scipy.io.loadmat(fname)
      
-######################################################################
-"""label1=[]
-for k in range(34):
-    label1.append(data['data'][0][k][1][0][0])
-
-label2=[]
-for l in range(10):
-    label2.append(label1)
-label2=np.array(label2)
-label=label2.flatten()
-
-label1=[]
-for k in range(55):
-    label1.append(data['data'][0][k][1][0][0])
-
-label2=[]
-for l in range(10):
-    label2.append(label1)
-label2=np.array(label2)
-label=label2.flatten()
-"""
 label1=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 3, 1, 1, 3, 1,
         1, 1, 3, 3, 2, 1, 1, 1, 2, 2, 3, 3, 3, 1, 3, 2, 3, 1, 1, 2, 2, 1, 1,
         1, 1, 1, 1, 1, 3, 2, 1, 1]
@@ -60,30 +39,13 @@ kernel=np.zeros([p,p], dtype = int)
 for i in range(p):
     for j in range(p):
         kernel[i,j]= (i-j)**2
-            
-#conv_img,kernel=convsource.conv(grey_image, padding=0,strides=1)
 
 def create_features(img):
-    # flatten three channel color image
-    color_features = img.flatten()
     # convert image to greyscale
     grey_image = rgb2grey(img)
-    # get HOG features from greyscale image
-    hog_features = hog(grey_image, block_norm='L2-Hys',
-                       pixels_per_cell=(16, 16))
-    
-    g= greycomatrix(img, [5], [0.,np.pi/4, np.pi/2.,3.*np.pi/4.], levels=256, 
-                    normed=True, symmetric=True)
-    
-    #contrast= greycoprops(g,'contrast')
+   
     convimg=convsource.convolution2d(grey_image,kernel,40,0)
 
-    #print(np.shape(contrast))
-    #conv_img= convolve2D(g, kernel1, padding=0, strides=1)
-    #conv_img=convsource.conv(g, padding=0,strides=1)
-    #print(np.shape(g))
-    #print((conv_img))
-    #conv_f= conv_img.flatten()
     flat_features = convimg.flatten()
     return flat_features
     
@@ -99,7 +61,6 @@ def create_feature_matrix():
      feature_matrix = np.array(features_list)
      return feature_matrix
 feature_matrix = create_feature_matrix()
-#print(feature_matrix)
 
 ss = StandardScaler()
 img_stand = ss.fit_transform(feature_matrix)
